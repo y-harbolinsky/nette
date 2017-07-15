@@ -7,18 +7,21 @@ use Nette\Application\UI\Form;
 use Nette\Database\Context;
 use App\Forms\PostFormFactory;
 use App\Forms\CommentFormFactory;
+use App\Model\Comment;
 
 
 class PostPresenter extends Presenter
 {
 
 	private $database;
+	private $comment;
 
-	public function __construct(Context $database)
+	public function __construct(Context $database, Comment $comment)
 	{
 
 		parent::__construct();
 		$this->database = $database;
+		$this->comment = $comment;
 
 	}
 
@@ -96,28 +99,13 @@ class PostPresenter extends Presenter
 	protected function createComponentCommentForm()
 	{
 
-		$form = (new CommentFormFactory)->create();
-		$form->onSuccess[] = [$this, 'commentFormSucceeded'];
-		$form->addProtection('Security token has expired, please submit the form again');
+		$postId = $this->getParameter('postId');
+		$form = (new CommentFormFactory($this->comment))->create($postId, function () {
+			$this->flashMessage('Thank you for your comment', 'success');
+			$this->redirect('this');
+		});
 
 		return $form;
-
-	}
-
-	public function commentFormSucceeded(Form $form, $values)
-	{
-
-		$postId = $this->getParameter('postId');
-
-		$this->database->table('comments')->insert([
-			'post_id' => $postId,
-			'name' => $values->name,
-			'email' => $values->email,
-			'content' => $values->content,
-		]);
-
-		$this->flashMessage('Thank you for your comment', 'success');
-		$this->redirect('this');
 
 	}
 

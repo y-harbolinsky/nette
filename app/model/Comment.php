@@ -24,9 +24,9 @@ class Comment
 
 		$this->database->table('comments')->insert([
 			'post_id' => $postId,
-			'name' => $values->name,
-			'email' => $values->email,
-			'content' => $values->content,
+			'name' => $values['name'],
+			'email' => $values['email'],
+			'content' => $values['content'],
 		]);
 
 	}
