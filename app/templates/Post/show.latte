@@ -27,4 +27,11 @@
         {/foreach}
     </div>
 
+    <div>
+        {snippet counter}
+            <p>{$count}</p>
+        {/snippet}
+        <a class="ajax" n:href="counter! $count">Count test</a>
+    </div>
+
 {/block}
