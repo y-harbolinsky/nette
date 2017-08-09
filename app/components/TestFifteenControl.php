@@ -21,6 +21,8 @@ class TestFifteenControl extends Control
 	/** @persistent int  */
 	public $round = 0;
 
+	public $text = '';
+
 	public function __construct()
 	{
 
@@ -41,6 +43,7 @@ class TestFifteenControl extends Control
 
 		$this->template->width = $this->width;
 		$this->template->order = $this->order;
+		$this->template->text = $this->text;
 		$this->template->render(__DIR__ . '/TestFifteenControl.latte');
 
 	}
@@ -126,6 +129,15 @@ class TestFifteenControl extends Control
 		}
 
 		$this->round = 0;
+
+	}
+
+	public function handleChangeVariable()
+	{
+
+		if ($this->presenter->isAjax()) {
+			$this->presenter->redrawControl('fifteen');
+		}
 
 	}
 
