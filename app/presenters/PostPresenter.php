@@ -15,6 +15,7 @@ class PostPresenter extends Presenter
 
 	private $database;
 	private $comment;
+	private $count = 0;
 
 	public function __construct(Context $database, Comment $comment)
 	{
@@ -92,6 +93,7 @@ class PostPresenter extends Presenter
 		}
 
 		$this->template->post = $post;
+		$this->template->count = $this->count;
 		$this->template->comments = $post->related('comments')->order('created_at DESC')->limit(10);
 
 	}
@@ -106,6 +108,16 @@ class PostPresenter extends Presenter
 		});
 
 		return $form;
+
+	}
+
+	public function handleCounter($count)
+	{
+
+		if ($this->isAjax()) {
+			$this->count = ++$count;
+			$this->redrawControl('counter');
+		}
 
 	}
 
